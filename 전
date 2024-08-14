@@ -1,0 +1,185 @@
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import EditPage from './pages/EditPage';
+import CreatePage from './pages/CreatePage';
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/edit/:id" element={<EditPage />} />
+        <Route path="/create" element={<CreatePage />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+
+
+
+#####################
+
+
+import React from 'react';
+
+function HomePage() {
+  return (
+    <div>
+      <h1>Welcome to My Dictionary</h1>
+      <p>Select a page to view or create a new one.</p>
+    </div>
+  );
+}
+
+export default HomePage;
+
+
+
+
+#################
+
+
+
+
+import React from 'react';
+import { useParams } from 'react-router-dom';
+
+function EditPage() {
+  const { id } = useParams();
+
+  return (
+    <div>
+      <h1>Edit Page {id}</h1>
+      <p>Edit the content of your page here.</p>
+    </div>
+  );
+}
+
+export default EditPage;
+
+
+
+###################
+
+
+import React from 'react';
+
+function CreatePage() {
+  return (
+    <div>
+      <h1>Create a New Page</h1>
+      <p>Write your new page content here.</p>
+    </div>
+  );
+}
+
+export default CreatePage;
+
+#################
+
+
+git add .
+git commit -m "Initialize React frontend with basic routing"
+git push origin main
+
+
+cd ../backend
+npm init -y
+npm install express mongoose cors dotenv
+
+
+
+#######################
+
+
+
+
+
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+require('dotenv').config();
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+app.use(cors());
+app.use(express.json());
+
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => console.log("MongoDB connected"))
+  .catch(err => console.log(err));
+
+app.get('/', (req, res) => {
+  res.send('Welcome to the My Dictionary API');
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+
+###############
+MONGODB_URI=your_mongodb_connection_string
+
+git add .
+git commit -m "Initialize Express backend with MongoDB connection"
+git push origin main
+
+npm install axios
+
+
+#################
+
+import axios from 'axios';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
+export const getPages = async () => {
+  const response = await axios.get(`${API_URL}/pages`);
+  return response.data;
+};
+
+#####################
+
+
+const mongoose = require('mongoose');
+
+const PageSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  content: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+});
+
+module.exports = mongoose.model('Page', PageSchema);
+
+
+
+################3##########
+
+
+const Page = require('./models/Page');
+
+app.get('/pages', async (req, res) => {
+  try {
+    const pages = await Page.find();
+    res.json(pages);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+###################3##
+
+git add .
+git commit -m "Add API endpoint for fetching pages"
+git push origin main
+
+
+
