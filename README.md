@@ -1,1 +1,1 @@
-# whdPsk2.github.io
+# my-dictionary
